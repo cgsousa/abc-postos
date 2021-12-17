@@ -3,8 +3,6 @@ ABC postos de abastecimentos e tanques de combustíveis
 
 Requisitos funcionais:
 
-Você foi contratado para analisar e desenvolver um software para gerenciar os abastecimentos e tanques de combustíveis do posto ABC. Sabendo disso, leia com atenção as informações que o gerente do posto descreveu:
-
 1.      Preciso controlar os abastecimentos feitos durante cada dia, identificando a bomba utilizada, a quantidade de litros e o valor abastecido;
 
 2.      Em cada abastecimento incide um imposto de 13% do valor abastecido, e essa informação deve ser registrada;
