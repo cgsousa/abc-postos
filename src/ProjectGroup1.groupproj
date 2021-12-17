@@ -1,0 +1,60 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{44558526-2E3D-49EA-A9F3-D4C27EEE0C64}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="ABC_APP_PDV.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Samples\SimpleORM\Sample\Firedac\SimpleORMFiredac.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Samples\Demos\Object Pascal\RTL\AttributesAndRTTI\rtti_browser\rtti_browser.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="ABC_APP_PDV">
+        <MSBuild Projects="ABC_APP_PDV.dproj"/>
+    </Target>
+    <Target Name="ABC_APP_PDV:Clean">
+        <MSBuild Projects="ABC_APP_PDV.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ABC_APP_PDV:Make">
+        <MSBuild Projects="ABC_APP_PDV.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SimpleORMFiredac">
+        <MSBuild Projects="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Samples\SimpleORM\Sample\Firedac\SimpleORMFiredac.dproj"/>
+    </Target>
+    <Target Name="SimpleORMFiredac:Clean">
+        <MSBuild Projects="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Samples\SimpleORM\Sample\Firedac\SimpleORMFiredac.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SimpleORMFiredac:Make">
+        <MSBuild Projects="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Samples\SimpleORM\Sample\Firedac\SimpleORMFiredac.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="rtti_browser">
+        <MSBuild Projects="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Samples\Demos\Object Pascal\RTL\AttributesAndRTTI\rtti_browser\rtti_browser.dproj"/>
+    </Target>
+    <Target Name="rtti_browser:Clean">
+        <MSBuild Projects="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Samples\Demos\Object Pascal\RTL\AttributesAndRTTI\rtti_browser\rtti_browser.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="rtti_browser:Make">
+        <MSBuild Projects="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Samples\Demos\Object Pascal\RTL\AttributesAndRTTI\rtti_browser\rtti_browser.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="ABC_APP_PDV;SimpleORMFiredac;rtti_browser"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="ABC_APP_PDV:Clean;SimpleORMFiredac:Clean;rtti_browser:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="ABC_APP_PDV:Make;SimpleORMFiredac:Make;rtti_browser:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
