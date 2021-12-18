@@ -12,6 +12,7 @@ type
   MsgDlg = object
     function comfirm(const aMsg: string): Boolean;
     procedure info(const aMsg: string);
+    procedure alert(const aMsg: string);
   end;
 
 type
@@ -45,6 +46,11 @@ implementation
 
 
 { MsgDlg }
+
+procedure MsgDlg.alert(const aMsg: string);
+begin
+  TaskMessageDlg('Advertência', aMsg, mtWarning, [mbOK], 0);
+end;
 
 function MsgDlg.comfirm(const aMsg: string): Boolean;
 begin

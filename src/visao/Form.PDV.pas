@@ -16,7 +16,7 @@ type
     Panel1: TPanel;
     tvBomba: TTreeView;
     lvBicos: TListView;
-    pnlQtd: TPanel;
+    pnlQtde: TPanel;
     Label1: TLabel;
     edtQtd: TMaskEdit;
     lvPedido: TListView;
@@ -65,6 +65,7 @@ begin
   TryStrToFloat(Trim(edtQtd.Text), qtd);
   if(qtd <= 0)then
   begin
+    dlg.alert('O campo quantidade DEVE ser informado!');
     edtQtd.SetFocus;
     exit;
   end;
@@ -97,6 +98,10 @@ begin
     finally
       lvPedido.Items.EndUpdate;
     end;
+
+    tvBomba.Enabled :=false;
+    pnlQtde.Enabled :=false;
+    actConfirm.Enabled :=true;
 
   end;
 end;
@@ -213,6 +218,9 @@ begin
   finally
     tvBomba.Items.EndUpdate;
   end;
+
+
+  actConfirm.Enabled :=false;
 
 end;
 

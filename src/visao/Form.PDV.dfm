@@ -40,7 +40,7 @@ object frmPDV: TfrmPDV
         VerticalPositioning = spvpTop
       end
       item
-        Control = pnlQtd
+        Control = pnlQtde
         HorizontalPositioning = sphpFill
         VerticalPositioning = spvpTop
       end
@@ -102,12 +102,13 @@ object frmPDV: TfrmPDV
         053C0000000200000000000000FFFFFFFFFFFFFFFF00000000FFFFFFFF000000
         00024200310000000000FFFFFFFFFFFFFFFF00000000FFFFFFFF000000000242
         003200}
+      ReadOnly = True
       RowSelect = True
       TabOrder = 2
       TabStop = False
       ViewStyle = vsReport
     end
-    object pnlQtd: TPanel
+    object pnlQtde: TPanel
       Left = 0
       Top = 231
       Width = 472
@@ -181,9 +182,9 @@ object frmPDV: TfrmPDV
   end
   object pnlFooter: TStackPanel
     Left = 0
-    Top = 562
+    Top = 572
     Width = 474
-    Height = 50
+    Height = 40
     Align = alBottom
     BevelOuter = bvNone
     BorderStyle = bsSingle
@@ -204,12 +205,9 @@ object frmPDV: TfrmPDV
     ParentFont = False
     Spacing = 3
     TabOrder = 1
-    ExplicitLeft = -160
-    ExplicitTop = 402
-    ExplicitWidth = 634
     object Button2: TButton
       Left = 5
-      Top = 9
+      Top = 4
       Width = 100
       Height = 30
       Action = actConfirm
@@ -217,7 +215,7 @@ object frmPDV: TfrmPDV
     end
     object Button3: TButton
       Left = 108
-      Top = 9
+      Top = 4
       Width = 100
       Height = 30
       Action = actCancel

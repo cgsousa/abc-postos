@@ -70,6 +70,8 @@ end;
 procedure TfrmPrinc00.DoCreate;
 begin
   inherited;
+  ReportMemoryLeaksOnShutdown := true;
+
   dbConnection.createInstance(
     ExtractFilePath(Application.ExeName) +'abc21posto.db'
   );

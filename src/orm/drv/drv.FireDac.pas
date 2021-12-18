@@ -28,11 +28,11 @@ type
 //  end;
 
 
-  TStatementFireDac = class(TInterfacedObject, IBaseStatement, IBaseDatasetStatement)
+  TStatementFireDac = class(TInterfacedObject, IBaseStatement) //, IBaseDatasetStatement)
   private
     //fConnection: TFDConnection;
     fQuery: TFDCustomQuery; //TDataset;
-    function getDataset: TDataset;
+    //function getDataset: TDataset;
   public
     constructor Create(aConnection: TFDConnection);
     destructor Destroy; override;
@@ -91,9 +91,5 @@ begin
 
 end;
 
-function TStatementFireDac.getDataset: TDataset;
-begin
-
-end;
 
 end.

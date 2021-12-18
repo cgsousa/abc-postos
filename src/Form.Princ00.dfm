@@ -2,9 +2,7 @@ object frmPrinc00: TfrmPrinc00
   Left = 0
   Top = 0
   BorderStyle = bsSingle
-  Caption = 
-    'Posto ABC /Gerenciar os abastecimentos e tanques de combust'#237'veis' +
-    ' '
+  Caption = 'ABC Controle de Abastecimentos e tanques de combust'#237'veis '
   ClientHeight = 452
   ClientWidth = 794
   Color = clWindow
@@ -19,9 +17,9 @@ object frmPrinc00: TfrmPrinc00
   TextHeight = 18
   object pnlFooter: TStackPanel
     Left = 0
-    Top = 402
+    Top = 412
     Width = 794
-    Height = 50
+    Height = 40
     Align = alBottom
     BevelOuter = bvNone
     BorderStyle = bsSingle
@@ -50,7 +48,7 @@ object frmPrinc00: TfrmPrinc00
     TabOrder = 0
     object Button1: TButton
       Left = 5
-      Top = 9
+      Top = 4
       Width = 100
       Height = 30
       Action = actFilter
@@ -58,7 +56,7 @@ object frmPrinc00: TfrmPrinc00
     end
     object Button2: TButton
       Left = 108
-      Top = 9
+      Top = 4
       Width = 100
       Height = 30
       Action = actNew
@@ -66,7 +64,7 @@ object frmPrinc00: TfrmPrinc00
     end
     object Button3: TButton
       Left = 211
-      Top = 9
+      Top = 4
       Width = 100
       Height = 30
       Action = actReport
@@ -74,7 +72,7 @@ object frmPrinc00: TfrmPrinc00
     end
     object Button4: TButton
       Left = 314
-      Top = 9
+      Top = 4
       Width = 100
       Height = 30
       Action = actClose
@@ -85,7 +83,7 @@ object frmPrinc00: TfrmPrinc00
     Left = 0
     Top = 0
     Width = 150
-    Height = 402
+    Height = 412
     Align = alLeft
     BevelOuter = bvNone
     BorderStyle = bsSingle
@@ -113,7 +111,7 @@ object frmPrinc00: TfrmPrinc00
     Left = 150
     Top = 0
     Width = 644
-    Height = 402
+    Height = 412
     Align = alClient
     Columns = <
       item

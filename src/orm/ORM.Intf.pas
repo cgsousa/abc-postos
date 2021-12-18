@@ -8,35 +8,38 @@ uses
   System.SysUtils;
 
 type
-  IBaseORMSQLAttr<T : class> = interface;
+  IBaseDAOSQLAttr<T : class> = interface;
 
-  IBaseORM<T : class> = interface
-    function insert(aValue : T): IBaseORM<T>; overload;
-    function update(aValue : T): IBaseORM<T>; overload;
-    function delete(aValue : T): IBaseORM<T>; overload;
-    function lastID : IBaseORM<T>;
-    function lastRecord: IBaseORM<T>;
-    function delete(const aField, aValue: String): IBaseORM<T>; overload;
-    function find(const aBindList: Boolean = True): IBaseORM<T>; overload;
-    function find(var aList: TObjectList<T>): IBaseORM<T>; overload;
+  IBaseDAO<T : class> = interface
+    function insert(aValue : T): IBaseDAO<T>; overload;
+    function update(aValue : T): IBaseDAO<T>; overload;
+    function delete(aValue : T): IBaseDAO<T>; overload;
+    function delete(const aField, aValue: String): IBaseDAO<T>; overload;
+
+    function lastID : IBaseDAO<T>;
+    function lastRecord: IBaseDAO<T>;
+
+    function find(const aBindList: Boolean = True): IBaseDAO<T>; overload;
+    function find(var aList: TObjectList<T>): IBaseDAO<T>; overload;
     function find(const aId: Integer): T; overload;
-    function find(const aKey: String; aValue : Variant): IBaseORM<T>; overload;
-    function sql: IBaseORMSQLAttr<T>;
+    function find(const aKey: String; aValue : Variant): IBaseDAO<T>; overload;
+    function sql: IBaseDAOSQLAttr<T>;
   end;
 
-  IBaseORMSQLAttr<T : class> = interface
-    function fields(const aSQL: String): IBaseORMSQLAttr<T>; overload;
-    function where(const aSQL: String): IBaseORMSQLAttr<T>; overload;
-    function orderBy(const aSQL: String): IBaseORMSQLAttr<T>; overload;
-    function groupBy(const aSQL: String): IBaseORMSQLAttr<T>; overload;
-    function join(const aSQL: String): IBaseORMSQLAttr<T>; overload;
-    function join: String; overload;
+  IBaseDAOSQLAttr<T : class> = interface
+    function fields(const aSQL: String): IBaseDAOSQLAttr<T>; overload;
     function Fields: String; overload;
-    function where: String; overload;
-    function orderBy: String; overload;
+    function join(const aSQL: String): IBaseDAOSQLAttr<T>; overload;
+    function join: String; overload;
+    function groupBy(const aSQL: String): IBaseDAOSQLAttr<T>; overload;
     function groupBy: String; overload;
-    function clear: IBaseORMSQLAttr<T>;
-    function &end: IBaseORM<T>;
+    function where(const aSQL: String): IBaseDAOSQLAttr<T>; overload;
+    function where: String; overload;
+    function orderBy(const aSQL: String): IBaseDAOSQLAttr<T>; overload;
+    function orderBy: String; overload;
+
+    function clear: IBaseDAOSQLAttr<T>;
+    function &end: IBaseDAO<T>;
   end;
 
   IBaseRTTI<T : class> = interface
@@ -89,9 +92,9 @@ type
     function executeQuery: IBaseResultSet;
   end;
 
-  IBaseDatasetStatement = interface(IBaseStatement)
-    function getDataset: TDataset;
-  end;
+//  IBaseDatasetStatement = interface(IBaseStatement)
+//    function getDataset: TDataset;
+//  end;
 
   IBaseNegocio<T> = Interface(IInterface)
     procedure inserirOrAtualizar(dominio: T);

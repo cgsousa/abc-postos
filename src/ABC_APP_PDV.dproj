@@ -122,7 +122,7 @@
         <DCCReference Include="dominio\Pedido.pas"/>
         <DCCReference Include="dominio\produto.pas"/>
         <DCCReference Include="orm\drv\drv.FireDac.pas"/>
-        <DCCReference Include="orm\ORM.DAO.pas"/>
+        <DCCReference Include="orm\ORM.BaseDAO.pas"/>
         <DCCReference Include="visao\Form.PDV.pas">
             <Form>frmPDV</Form>
             <FormType>dfm</FormType>
@@ -133,6 +133,8 @@
         <DCCReference Include="dominio\Bomba.pas"/>
         <DCCReference Include="dominio\Bico.pas"/>
         <DCCReference Include="dto\BaseItem.pas"/>
+        <DCCReference Include="orm\ORM.SQLAttr.pas"/>
+        <DCCReference Include="orm\BaseRTTI.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -159,7 +161,7 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="bin\Win32\Debug\ABC_APP_PDV.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\bin\ABC_APP_PDV.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>ABC_APP_PDV.exe</RemoteName>
                         <Overwrite>true</Overwrite>

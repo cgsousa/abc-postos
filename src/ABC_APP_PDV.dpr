@@ -12,14 +12,16 @@ uses
   Pedido in 'dominio\Pedido.pas',
   produto in 'dominio\produto.pas',
   drv.FireDac in 'orm\drv\drv.FireDac.pas',
-  ORM.DAO in 'orm\ORM.DAO.pas',
+  ORM.BaseDAO in 'orm\ORM.BaseDAO.pas',
   Form.PDV in 'visao\Form.PDV.pas' {frmPDV},
   Pedido.Negocio in 'negocio\Pedido.Negocio.pas',
   Cadastro.Negocio in 'negocio\Cadastro.Negocio.pas',
   Tanque in 'dominio\Tanque.pas',
   Bomba in 'dominio\Bomba.pas',
   Bico in 'dominio\Bico.pas',
-  BaseItem in 'dto\BaseItem.pas';
+  BaseItem in 'dto\BaseItem.pas',
+  ORM.SQLAttr in 'orm\ORM.SQLAttr.pas',
+  BaseRTTI in 'orm\BaseRTTI.pas';
 
 {$R *.res}
 
