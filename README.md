@@ -32,8 +32,11 @@ OBS 1: O software esta seguindo os requisitos não funcionais bem pontuados.
 OBS 2: Como um ORM demanda um tempo para ficar funcional, ainda esta em desenvolvimento para uso do software!
 
 Estrutura de pastas do software:
-bin >> arquivos binário (exe, db);
-db >> script do banco de dados;
-src >> aquivos fontes;
-test >> testes unitários.
 
+bin >> arquivos binário (exe, db);
+
+db >> script do banco de dados;
+
+src >> aquivos fontes;
+
+test >> testes unitários.
