@@ -28,6 +28,7 @@ Requisitos não funcionais que vão ser bem pontuados:
 6. Firedac.
 
 OBS 1: O software esta seguindo os requisitos não funcionais bem pontuados.
+
 OBS 2: Como um ORM demanda um tempo para ficar funcional, ainda esta em desenvolvimento para uso do software!
 
 Estrutura de pastas do software:
