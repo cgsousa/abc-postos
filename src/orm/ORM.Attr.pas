@@ -39,7 +39,7 @@ type
   AutoInc = class(TCustomAttribute)
   end;
 
-  NumberOnly = class(TCustomAttribute)
+  OnlyNumber = class(TCustomAttribute)
   end;
 
 

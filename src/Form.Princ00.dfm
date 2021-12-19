@@ -174,13 +174,4 @@ object frmPrinc00: TfrmPrinc00
       OnExecute = actCloseExecute
     end
   end
-  object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
-    Left = 544
-    Top = 144
-  end
-  object FDGUIxWaitCursor1: TFDGUIxWaitCursor
-    Provider = 'Forms'
-    Left = 528
-    Top = 80
-  end
 end

@@ -106,18 +106,20 @@
             <Form>frmPrinc00</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="infra\dm\DM.StdConn.pas">
+            <Form>dmStdConn</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
         <DCCReference Include="infra\udatabase.pas"/>
         <DCCReference Include="infra\uStdCtrls.pas"/>
         <DCCReference Include="orm\ORM.Attr.pas"/>
         <DCCReference Include="orm\ORM.Intf.pas"/>
         <DCCReference Include="infra\dm\Frame.ToolBar.pas">
             <Form>fraToolBar</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="visao\Form.Produto.pas">
             <Form>frmProduto</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="dominio\Pedido.pas"/>
         <DCCReference Include="dominio\produto.pas"/>
@@ -125,7 +127,6 @@
         <DCCReference Include="orm\ORM.BaseDAO.pas"/>
         <DCCReference Include="visao\Form.PDV.pas">
             <Form>frmPDV</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="negocio\Pedido.Negocio.pas"/>
         <DCCReference Include="negocio\Cadastro.Negocio.pas"/>
@@ -135,6 +136,7 @@
         <DCCReference Include="dto\BaseItem.pas"/>
         <DCCReference Include="orm\ORM.SQLAttr.pas"/>
         <DCCReference Include="orm\BaseRTTI.pas"/>
+        <DCCReference Include="orm\BaseSQL.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -34,7 +34,6 @@ type
     function lastID: IBaseDAO<T>;
     function lastRecord: IBaseDAO<T>;
 
-    function find(const aBindList: Boolean = True): IBaseDAO<T>; overload;
     function find(var aList: TObjectList<T>): IBaseDAO<T>; overload;
     function find(const aId: Integer): T; overload;
     function find(const aKey: String; aValue: Variant): IBaseDAO<T>; overload;
@@ -44,6 +43,12 @@ type
 
 
 implementation
+
+uses System.SysUtils, System.TypInfo,
+  ORM.Attr,
+  BaseRTTI,
+  BaseSQL;
+
 
 { TBaseDAO<T> }
 
@@ -72,12 +77,14 @@ end;
 
 function TBaseDAO<T>.fillParameter(aInstance: T): IBaseDAO<T>;
 var
-  key: String;
   dictionaryFields: TDictionary<String, Variant>;
-  P: TParams;
+  bsRTTI: IBaseRTTI<T>;
+  key: String;
+  //P: TParams;
 begin
   dictionaryFields := TDictionary<String, Variant>.Create;
-  TBaseRTTI<T>.New(aInstance).DictionaryFields(DictionaryFields);
+  bsRTTI :=TBaseRTTI<T>.Create(aInstance);
+  bsRTTI.DictionaryFields(dictionaryFields);
   try
     for Key in DictionaryFields.Keys do
     begin
@@ -101,11 +108,6 @@ begin
 end;
 
 function TBaseDAO<T>.find(const aId: Integer): T;
-begin
-
-end;
-
-function TBaseDAO<T>.find(const aBindList: Boolean): IBaseDAO<T>;
 begin
 
 end;

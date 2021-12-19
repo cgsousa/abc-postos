@@ -19,7 +19,6 @@ type
     function lastID : IBaseDAO<T>;
     function lastRecord: IBaseDAO<T>;
 
-    function find(const aBindList: Boolean = True): IBaseDAO<T>; overload;
     function find(var aList: TObjectList<T>): IBaseDAO<T>; overload;
     function find(const aId: Integer): T; overload;
     function find(const aKey: String; aValue : Variant): IBaseDAO<T>; overload;

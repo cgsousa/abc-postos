@@ -9,10 +9,53 @@ uses
   Data.DB,
   TypInfo,
   System.Classes,
-  System.SysUtils;
+  System.SysUtils,
+  ORM.Attr;
 
 type
   EBaseRTTI = Exception;
+
+  // helpers
+  TCustomAttributeClass = class of TCustomAttribute;
+
+  TRttiPropertyHelper = class helper for TRttiProperty
+  public
+    function contains<T: TCustomAttribute>: Boolean;
+    function getAttribute<T: TCustomAttribute>: T;
+    function isNotNull: Boolean;
+    function isIgnore: Boolean;
+    function isAutoInc: Boolean;
+    function isField: Boolean;
+    function isPrimaryKey: Boolean;
+    function isForeignKey: Boolean;
+    function isOnlyNumber: Boolean;
+    function isNull: Boolean;
+    //function displayName: string;
+    function fieldName: string;
+  end;
+
+  TRttiTypeHelper = class helper for TRttiType
+  public
+    function contains<T: TCustomAttribute>: Boolean;
+    function getAttribute<T: TCustomAttribute>: T;
+    function getPropertyFromAttribute<T: TCustomAttribute>: TRttiProperty; overload;
+    function getPropertyFromAttribute<T: Column>(const aFieldName: string): TRttiProperty; overload;
+    function getFieldPK: TRttiProperty;
+    function isTable: Boolean;
+  end;
+
+  TRttiFieldHelper = class helper for TRttiField
+  public
+    function contains<T: TCustomAttribute>: Boolean;
+    function getAttribute<T: TCustomAttribute>: T;
+  end;
+
+  TValueHelper = record helper for TValue
+  public
+    function asStringOnlyNumber: String;
+  end;
+
+
 
   TBaseRTTI<T : class, constructor> = class(TInterfacedObject, IBaseRTTI<T>)
   private
@@ -44,7 +87,158 @@ type
 
 implementation
 
-//uses StrUtils;
+//uses System.SysUtils;
+
+{ TRttiPropertyHelper }
+
+function TRttiPropertyHelper.contains<T>: Boolean;
+begin
+  Result :=GetAttribute<T> <> nil;
+end;
+
+function TRttiPropertyHelper.fieldName: string;
+begin
+  Result :=Name;
+  if isField then
+    Result := GetAttribute<Column>.name;
+end;
+
+function TRttiPropertyHelper.getAttribute<T>: T;
+var
+  attr: TCustomAttribute;
+begin
+  Result := nil;
+  for attr in GetAttributes do
+    if attr is T then
+      Exit((attr as T));
+end;
+
+function TRttiPropertyHelper.isAutoInc: Boolean;
+begin
+  Result :=contains<AutoInc>
+end;
+
+function TRttiPropertyHelper.isField: Boolean;
+begin
+  Result :=contains<Column>;
+end;
+
+function TRttiPropertyHelper.isForeignKey: Boolean;
+begin
+  Result :=contains<FK>;
+end;
+
+function TRttiPropertyHelper.isIgnore: Boolean;
+begin
+  Result :=contains<Ignore>;
+end;
+
+function TRttiPropertyHelper.isNotNull: Boolean;
+begin
+  Result :=contains<NotNull>;
+end;
+
+function TRttiPropertyHelper.isNull: Boolean;
+begin
+  Result :=not isNotNull;
+end;
+
+function TRttiPropertyHelper.isOnlyNumber: Boolean;
+begin
+  Result :=contains<OnlyNumber>;
+end;
+
+function TRttiPropertyHelper.isPrimaryKey: Boolean;
+begin
+  Result :=contains<PK>;
+end;
+
+
+{ TRttiTypeHelper }
+
+function TRttiTypeHelper.contains<T>: Boolean;
+begin
+  Result :=getAttribute<T> <> nil;
+end;
+
+function TRttiTypeHelper.getAttribute<T>: T;
+var
+  attr: TCustomAttribute;
+begin
+  Result :=nil;
+  for attr in GetAttributes do
+    if attr is T then
+      Exit((attr as T));
+end;
+
+function TRttiTypeHelper.getFieldPK: TRttiProperty;
+begin
+  Result :=getPropertyFromAttribute<PK>;
+end;
+
+function TRttiTypeHelper.getPropertyFromAttribute<T>: TRttiProperty;
+var
+  RttiProp: TRttiProperty;
+begin
+  Result :=nil;
+  for RttiProp in GetProperties do
+    if(RttiProp.GetAttribute<T> <> nil)then
+      Exit(RttiProp);
+end;
+
+function TRttiTypeHelper.getPropertyFromAttribute<T>(
+  const aFieldName: string): TRttiProperty;
+var
+  RttiProp: TRttiProperty;
+begin
+  Result := nil;
+  for RttiProp in GetProperties do
+  begin
+    if(RttiProp.GetAttribute<T> = nil)then
+      Continue;
+
+    if(RttiProp.GetAttribute<Column>.name = aFieldName)then
+      Exit(RttiProp);
+  end;
+end;
+
+function TRttiTypeHelper.isTable: Boolean;
+begin
+  Result :=contains<Table>;
+end;
+
+{ TRttiFieldHelper }
+
+function TRttiFieldHelper.contains<T>: Boolean;
+begin
+  Result :=getAttribute<T> <> nil;
+end;
+
+function TRttiFieldHelper.getAttribute<T>: T;
+var
+  attr: TCustomAttribute;
+begin
+  Result :=nil;
+  for attr in GetAttributes do
+    if attr is T then
+      Exit((attr as T));
+end;
+
+{ TValueHelper }
+
+function TValueHelper.asStringOnlyNumber: String;
+var
+  content: string;
+  index: Integer;
+begin
+  Result := '';
+  content := Trim(AsString);
+
+  for index := 1 to Length(content) do
+    if CharInSet(content[index], ['0'..'9']) then
+      Result :=Result + content[index];
+end;
+
 
 { TBaseRTTI<T> }
 
@@ -90,11 +284,13 @@ begin
 end;
 
 function TBaseRTTI<T>.floatFormat(const aValue: String): Currency;
+var
+  S: string;
 begin
-  Result :=Trim(avalue);
-  while Pos('.', Result) > 0 do
-    delete(aValue,Pos('.', Result),1);
-  //Result := StrToCurr(aValue);
+  S :=Trim(avalue);
+  while Pos('.', S) > 0 do
+    delete(S,Pos('.', S),1);
+  Result := StrToCurr(S);
 end;
 
 function TBaseRTTI<T>.getRTTIProperty(aEntity: T;
@@ -108,7 +304,7 @@ begin
     typRttiEntity := ctxRttiEntity.GetType(aEntity.ClassInfo);
     Result := typRttiEntity.GetProperty(aPropertyName);
     if not Assigned(Result) then
-      Result := typRttiEntity.GetPropertyFromAttribute<Campo>(aPropertyName);
+      Result := typRttiEntity.getPropertyFromAttribute<Column>(aPropertyName);
 
     if not Assigned(Result) then
       raise EBaseRTTI.Create('Property ' + aPropertyName + ' not found!');
@@ -149,7 +345,7 @@ begin
   vCtxRtti := TRttiContext.Create;
   try
     vTypRtti := vCtxRtti.GetType(vInfo);
-    if vTypRtti.Tem<Table> then
+    if vTypRtti.contains<Table> then
       aTableName := vTypRtti.GetAttribute<Table>.Name;
   finally
     vCtxRtti.Free;
@@ -165,5 +361,8 @@ function TBaseRTTI<T>.where(var aWhere: String): IBaseRTTI<T>;
 begin
 
 end;
+
+
+
 
 end.

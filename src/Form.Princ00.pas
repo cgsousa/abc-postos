@@ -6,10 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
   Vcl.WinXPanels, System.Actions, Vcl.ActnList, Vcl.StdCtrls,
-  uStdCtrls,
-  FireDAC.Stan.ExprFuncs, FireDAC.Phys.SQLiteDef, FireDAC.Stan.Intf,
-  FireDAC.Phys, FireDAC.Phys.SQLite, FireDAC.UI.Intf, FireDAC.VCLUI.Wait,
-  FireDAC.Comp.UI, Vcl.ComCtrls;
+  uStdCtrls, Vcl.ComCtrls;
 
 type
   TfrmPrinc00 = class(TBaseForm)
@@ -22,8 +19,6 @@ type
     actFilter: TAction;
     actNew: TAction;
     actReport: TAction;
-    FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink;
-    FDGUIxWaitCursor1: TFDGUIxWaitCursor;
     actClose: TAction;
     pnlFilter: TStackPanel;
     Label1: TLabel;

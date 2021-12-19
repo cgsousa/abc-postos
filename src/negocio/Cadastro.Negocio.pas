@@ -7,35 +7,6 @@ uses System.Generics.Collections,
   BaseItem;
 
 type
-{
-  TTanqueList = class;
-  TBombaList = class;
-  TBicoList = class;
-
-  TTanque = class(Tanque.TTanque)
-  private
-    fParent: TTanqueList;
-    fIndex: Integer;
-    fItems: TBombaList;
-  public
-    constructor Create(aParent: TTanqueList);
-    destructor Destroy; override;
-  end;
-
-  TBomba = class(Bomba.TBomba)
-  private
-    fParent: TTanque;
-    fItems: TBicoList;
-  public
-  end;
-
-  TBicos = class (TObjectList<TBico>)
-  private
-    fParent: TBomba;
-    fIndex: Integer;
-  public
-  end;
-}
 
   TCadastroNegocio = class
   private

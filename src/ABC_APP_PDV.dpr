@@ -3,6 +3,7 @@ program ABC_APP_PDV;
 uses
   Vcl.Forms,
   Form.Princ00 in 'Form.Princ00.pas' {frmPrinc00},
+  DM.StdConn in 'infra\dm\DM.StdConn.pas' {dmStdConn: TDataModule},
   udatabase in 'infra\udatabase.pas',
   uStdCtrls in 'infra\uStdCtrls.pas',
   ORM.Attr in 'orm\ORM.Attr.pas',
@@ -21,7 +22,8 @@ uses
   Bico in 'dominio\Bico.pas',
   BaseItem in 'dto\BaseItem.pas',
   ORM.SQLAttr in 'orm\ORM.SQLAttr.pas',
-  BaseRTTI in 'orm\BaseRTTI.pas';
+  BaseRTTI in 'orm\BaseRTTI.pas',
+  BaseSQL in 'orm\BaseSQL.pas';
 
 {$R *.res}
 
@@ -29,5 +31,6 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TfrmPrinc00, frmPrinc00);
+  Application.CreateForm(TdmStdConn, dmStdConn);
   Application.Run;
 end.

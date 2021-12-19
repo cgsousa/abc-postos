@@ -3,7 +3,7 @@ unit ORM.SQLAttr;
 interface
 
 uses
-    ORM.Intf;
+  ORM.Intf;
 
 type
   TBaseDAOSQLAttr<T: class> = class(TInterfacedObject, IBaseDAOSQLAttr<T>)
