@@ -1,10 +1,13 @@
 program ABC_APP_PDV;
 
+
+{.$DEFINE AUTOREFCOUNT}
+
 uses
   Vcl.Forms,
   Form.Princ00 in 'Form.Princ00.pas' {frmPrinc00},
   DM.StdConn in 'infra\dm\DM.StdConn.pas' {dmStdConn: TDataModule},
-  udatabase in 'infra\udatabase.pas',
+  uConnectionMgr in 'infra\uConnectionMgr.pas',
   uStdCtrls in 'infra\uStdCtrls.pas',
   ORM.Attr in 'orm\ORM.Attr.pas',
   ORM.Intf in 'orm\ORM.Intf.pas',
@@ -23,7 +26,8 @@ uses
   BaseItem in 'dto\BaseItem.pas',
   ORM.SQLAttr in 'orm\ORM.SQLAttr.pas',
   BaseRTTI in 'orm\BaseRTTI.pas',
-  BaseSQL in 'orm\BaseSQL.pas';
+  BaseSQL in 'orm\BaseSQL.pas',
+  PedidoDTO in 'dto\PedidoDTO.pas';
 
 {$R *.res}
 

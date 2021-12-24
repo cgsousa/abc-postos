@@ -10,8 +10,9 @@ type
   TPedido = class
   private
     fId: Integer;
-    fData: TDate;
+    fData: Integer;
     fIdBico: Integer;
+    fDescricao: string;
     fQuantidate: Double;
     fValorUnitario: Currency;
     fValorTotal: Currency;
@@ -22,9 +23,11 @@ type
     [Column('id'), PK, AutoInc]
     property iD: Integer read fId write fId;
     [Column('data')]
-    property data: TDate read fData write fData;
-    [Column('id_bico')]
+    property data: Integer read fData write fData;
+    [Column('id_bico'), FK]
     property idBico: Integer read fIdBico write fIdBico;
+    [Column('descricao')]
+    property descricao: String read fDescricao write fDescricao;
     [Column('quantidate')]
     property quantidate: Double read fQuantidate write fQuantidate;
     [Column('valor_unitario')]

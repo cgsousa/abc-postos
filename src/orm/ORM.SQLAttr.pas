@@ -10,7 +10,7 @@ type
   private
     [weak]
     fParent: IBaseDAO<T>;
-    fFields: String;
+    fcolumns: String;
     fJoin: String;
     fGroupBy: String;
     fWhere: String;
@@ -19,8 +19,8 @@ type
     constructor Create(parent: IBaseDAO<T>);
     destructor Destroy; override;
 
-    function fields(const aSQL: String): IBaseDAOSQLAttr<T>; overload;
-    function fields: String; overload;
+    function columns(const aSQL: String): IBaseDAOSQLAttr<T>; overload;
+    function columns: String; overload;
     function join(const aSQL: String): IBaseDAOSQLAttr<T>; overload;
     function join: String; overload;
     function groupBy(const aSQL: String): IBaseDAOSQLAttr<T>; overload;
@@ -47,11 +47,23 @@ uses System.SysUtils;
 function TBaseDAOSQLAttr<T>.clear: IBaseDAOSQLAttr<T>;
 begin
   Result := Self;
-  fFields := '';
+  fcolumns := '';
   fWhere := '';
   fOrderBy := '';
   fGroupBy := '';
   fJoin := '';
+end;
+
+function TBaseDAOSQLAttr<T>.columns: String;
+begin
+  Result :=fcolumns;
+end;
+
+function TBaseDAOSQLAttr<T>.columns(const aSQL: String): IBaseDAOSQLAttr<T>;
+begin
+  Result := Self;
+  if Trim(aSQL) <> '' then
+    fcolumns :=fcolumns + ' ' + aSQL;
 end;
 
 constructor TBaseDAOSQLAttr<T>.Create(parent: IBaseDAO<T>);
@@ -68,18 +80,6 @@ end;
 function TBaseDAOSQLAttr<T>.&end: IBaseDAO<T>;
 begin
   Result :=fParent;
-end;
-
-function TBaseDAOSQLAttr<T>.fields: String;
-begin
-  Result :=fFields;
-end;
-
-function TBaseDAOSQLAttr<T>.fields(const aSQL: String): IBaseDAOSQLAttr<T>;
-begin
-  Result := Self;
-  if Trim(aSQL) <> '' then
-    fFields := fFields + ' ' + aSQL;
 end;
 
 function TBaseDAOSQLAttr<T>.groupBy: String;

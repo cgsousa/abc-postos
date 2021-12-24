@@ -12,31 +12,26 @@ uses
   System.Threading;
 
 type
+
   TBaseDAO<T: class, constructor> = class(TInterfacedObject, IBaseDAO<T>)
   private
-    fQuery: IBaseStatement; //IBaseQuery;
+    fQuery: IBaseStatement;
     fSQLAttr: IBaseDAOSQLAttr<T>;
     fList: TObjectList<T>;
-    function fillParameter(aInstance: T): IBaseDAO<T>; overload;
-    function fillParameter(aInstance: T; aId: Variant): IBaseDAO<T>; overload;
+
+    fErrCod: Integer;
+    fErrMsg: string;
 
   public
     constructor Create(aQuery: IBaseStatement);
     destructor Destroy; override;
 
-//    class function New(aQuery: iSimpleQuery): IBaseDAO<T>; overload;
-
-    function insert(aValue: T): IBaseDAO<T>; overload;
-    function update(aValue: T): IBaseDAO<T>; overload;
-    function delete(aValue: T): IBaseDAO<T>; overload;
-    function delete(const aField, aValue: String): IBaseDAO<T>; overload;
-
-    function lastID: IBaseDAO<T>;
-    function lastRecord: IBaseDAO<T>;
+    function insert(aValue: T): IBaseDAO<T>;
+    function update(aValue: T): IBaseDAO<T>;
+    function delete(aValue: T): IBaseDAO<T>;
 
     function find(var aList: TObjectList<T>): IBaseDAO<T>; overload;
     function find(const aId: Integer): T; overload;
-    function find(const aKey: String; aValue: Variant): IBaseDAO<T>; overload;
     function sql: IBaseDAOSQLAttr<T>;
 
   end;
@@ -57,11 +52,8 @@ begin
   fQuery :=aQuery;
   fSQLAttr :=TBaseDAOSQLAttr<T>.Create(Self);
   fList :=TObjectList<T>.Create;
-end;
-
-function TBaseDAO<T>.delete(const aField, aValue: String): IBaseDAO<T>;
-begin
-
+  fErrCod :=0;
+  fErrMsg :='';
 end;
 
 function TBaseDAO<T>.delete(aValue: T): IBaseDAO<T>;
@@ -75,66 +67,48 @@ begin
   inherited;
 end;
 
-function TBaseDAO<T>.fillParameter(aInstance: T): IBaseDAO<T>;
-var
-  dictionaryFields: TDictionary<String, Variant>;
-  bsRTTI: IBaseRTTI<T>;
-  key: String;
-  //P: TParams;
-begin
-  dictionaryFields := TDictionary<String, Variant>.Create;
-  bsRTTI :=TBaseRTTI<T>.Create(aInstance);
-  bsRTTI.DictionaryFields(dictionaryFields);
-  try
-    for Key in DictionaryFields.Keys do
-    begin
-      if FQuery.Params.FindParam(Key) <> nil then
-        FQuery.Params.ParamByName(Key).Value :=
-          DictionaryFields.Items[Key];
-    end;
-  finally
-    FreeAndNil(DictionaryFields);
-  end;
-end;
-
-function TBaseDAO<T>.fillParameter(aInstance: T; aId: Variant): IBaseDAO<T>;
-begin
-
-end;
-
-function TBaseDAO<T>.find(const aKey: String; aValue: Variant): IBaseDAO<T>;
-begin
-
-end;
-
 function TBaseDAO<T>.find(const aId: Integer): T;
 begin
 
 end;
 
 function TBaseDAO<T>.find(var aList: TObjectList<T>): IBaseDAO<T>;
+var
+  sql: TBaseSQL<T>;
+  aSQL: String;
 begin
+  Result :=Self;
+//  sql :=TBaseSQL<T>.Create(nil);
+//  sql.columns(fSQLAttr.columns()).join(fSQLAttr.join())
+//    .where(fSQLAttr.where())
+//    .groupBy(fSQLAttr.groupBy())
+//    .orderBy(fSQLAttr.orderBy()).select(aSQL) ;
 
+//  FQuery.Open(aSQL);
+//  if aBindList then
+//      TSimpleRTTI<T>.New(nil).DataSetToEntityList(FQuery.DataSet, FList);
+//  FSQLAttribute.Clear;
+//  FQuery.DataSet.EnableControls;
 end;
 
 function TBaseDAO<T>.insert(aValue: T): IBaseDAO<T>;
+var
+  cmd: string ;
+  sql: TBaseSQL<T>;
 begin
+  Result :=Self;
+  sql :=TBaseSQL<T>.Create(aValue);
+  sql.insert(cmd) ;
+  fQuery.addCmd(cmd);
 
-end;
-
-function TBaseDAO<T>.lastID: IBaseDAO<T>;
-begin
-
-end;
-
-function TBaseDAO<T>.lastRecord: IBaseDAO<T>;
-begin
+  fQuery.setParams(sql.columns);
+  fQuery.execute;
 
 end;
 
 function TBaseDAO<T>.sql: IBaseDAOSQLAttr<T>;
 begin
-
+  Result :=fSQLAttr;
 end;
 
 function TBaseDAO<T>.update(aValue: T): IBaseDAO<T>;

@@ -3,8 +3,8 @@ object frmPDV: TfrmPDV
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Ponto de Venda'
-  ClientHeight = 612
-  ClientWidth = 474
+  ClientHeight = 422
+  ClientWidth = 594
   Color = clWindow
   Ctl3D = False
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object frmPDV: TfrmPDV
   object StackPanel1: TStackPanel
     Left = 0
     Top = 0
-    Width = 474
-    Height = 465
+    Width = 594
+    Height = 350
     Align = alTop
     BevelOuter = bvNone
     BorderStyle = bsSingle
@@ -49,11 +49,16 @@ object frmPDV: TfrmPDV
         HorizontalPositioning = sphpFill
         VerticalPositioning = spvpTop
       end>
+    Padding.Left = 3
+    Padding.Top = 3
+    Padding.Right = 3
+    Padding.Bottom = 3
+    Spacing = 3
     TabOrder = 0
     object Panel1: TPanel
-      Left = 0
-      Top = 0
-      Width = 472
+      Left = 3
+      Top = 3
+      Width = 586
       Height = 30
       Align = alTop
       BevelOuter = bvNone
@@ -68,9 +73,9 @@ object frmPDV: TfrmPDV
       TabOrder = 0
     end
     object tvBomba: TTreeView
-      Left = 0
-      Top = 32
-      Width = 472
+      Left = 3
+      Top = 36
+      Width = 586
       Height = 125
       Indent = 19
       ReadOnly = True
@@ -80,9 +85,9 @@ object frmPDV: TfrmPDV
       OnChange = tvBombaChange
     end
     object lvBicos: TListView
-      Left = 0
-      Top = 159
-      Width = 472
+      Left = 3
+      Top = 164
+      Width = 586
       Height = 70
       Columns = <
         item
@@ -94,7 +99,7 @@ object frmPDV: TfrmPDV
         end
         item
           Alignment = taRightJustify
-          Caption = 'Valor'
+          Caption = 'R$ Pre'#231'o'
           Width = 121
         end>
       HotTrack = True
@@ -109,9 +114,9 @@ object frmPDV: TfrmPDV
       ViewStyle = vsReport
     end
     object pnlQtde: TPanel
-      Left = 0
-      Top = 231
-      Width = 472
+      Left = 3
+      Top = 237
+      Width = 586
       Height = 30
       Align = alTop
       BevelOuter = bvNone
@@ -137,42 +142,44 @@ object frmPDV: TfrmPDV
         ExplicitHeight = 24
       end
       object Button1: TButton
-        Left = 372
+        Left = 486
         Top = 0
         Width = 100
         Height = 30
         Action = actAdd
         Align = alRight
         TabOrder = 1
+        ExplicitLeft = 372
       end
     end
     object lvPedido: TListView
-      Left = 0
-      Top = 263
-      Width = 472
+      Left = 3
+      Top = 270
+      Width = 586
       Height = 50
       Columns = <
         item
           Caption = '# Descri'#231#227'o'
-          Width = 175
+          Width = 250
         end
         item
           Alignment = taRightJustify
           Caption = 'Qtd'
-          Width = 65
+          Width = 75
         end
         item
           Alignment = taCenter
           Caption = 'UND'
         end
         item
+          Alignment = taRightJustify
           Caption = 'V.Unit'#225'rio'
           Width = 75
         end
         item
           Alignment = taRightJustify
           Caption = 'V.Total'
-          Width = 75
+          Width = 100
         end>
       ReadOnly = True
       RowSelect = True
@@ -182,8 +189,8 @@ object frmPDV: TfrmPDV
   end
   object pnlFooter: TStackPanel
     Left = 0
-    Top = 572
-    Width = 474
+    Top = 382
+    Width = 594
     Height = 40
     Align = alBottom
     BevelOuter = bvNone
@@ -205,6 +212,8 @@ object frmPDV: TfrmPDV
     ParentFont = False
     Spacing = 3
     TabOrder = 1
+    ExplicitTop = 572
+    ExplicitWidth = 474
     object Button2: TButton
       Left = 5
       Top = 4

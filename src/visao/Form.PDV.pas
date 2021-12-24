@@ -34,8 +34,8 @@ type
     procedure actCancelExecute(Sender: TObject);
   private
     { Private declarations }
-    fCadastroNegocio: TCadastroNegocio;
-    fTanques: TBaseItem;
+    fCadastroNegocio: TCadastroNegocio; //ICadastroNegocio;
+    fTanques: IBaseItem;
     fPedido: TPedido;
     procedure doRefreshBicos(aNode: TTreeNode);
   protected
@@ -59,8 +59,9 @@ uses Pedido.Negocio;
 procedure TfrmPDV.actAddExecute(Sender: TObject);
 var
   qtd: Double;
+//  tanque:
   item: TListItem;
-  bico: TBaseItem;
+  bomba, bico: IBaseItem;
 begin
   TryStrToFloat(Trim(edtQtd.Text), qtd);
   if(qtd <= 0)then
@@ -71,26 +72,32 @@ begin
   end;
 
   item :=lvBicos.Items[lvBicos.ItemIndex];
-  bico :=TBaseItem(item.Data);
+  if(item.Data = nil)then
+    exit;
+
+  bico :=IBaseItem(item.Data);
+  bomba :=bico.parent;
 
   if not Assigned(fPedido)then
   begin
     fPedido :=TPedido.Create ;
-    fPedido.data :=Date;
+    fPedido.data :=Trunc(Date);
     fPedido.idBico :=bico.id;
+    fPedido.descricao :=Format('BOMBA:%.2d %s/BICO:%.2d',[bomba.iD,bomba.descricao,bico.iD]);
     fPedido.quantidate :=qtd;
-    fPedido.valorUnitario :=bico.pro_preco;
-    fPedido.valorTotal :=qtd *bico.pro_preco;
-    fPedido.valorImposto :=(qtd *bico.pro_preco) *(bico.pro_imposto/100);
+    fPedido.valorUnitario :=bico.preco;
+    fPedido.valorTotal :=fPedido.quantidate *fPedido.valorUnitario;
+    fPedido.aliquotaImposto :=bico.imposto;
+    fPedido.valorImposto :=fPedido.valorTotal *(fPedido.aliquotaImposto/100);
 
     lvPedido.Items.BeginUpdate;
     try
       lvPedido.Items.Clear;
 
       item :=lvPedido.Items.Add;
-      item.Caption :=Format('%d %s',[bico.id,bico.pro_descr]);
+      item.Caption :=Format('%d %s',[bico.id,fPedido.descricao]);
       item.SubItems.Add(Format('%7.3f',[fPedido.quantidate]));
-      item.SubItems.Add(bico.pro_unid);
+      item.SubItems.Add(bico.unidade);
       item.SubItems.Add(Format('%7.3m',[fPedido.valorUnitario]));
       item.SubItems.Add(Format('%7.3m',[fPedido.valorTotal]));
       item.Data :=bico;
@@ -113,12 +120,19 @@ end;
 
 procedure TfrmPDV.actConfirmExecute(Sender: TObject);
 var
-  negocio: TPedidoNegocio;
+  negocio: IPedidoNegocio;
 begin
-  if dlg.comfirm('Confirmar venda?')then
+  if dlg.comfirm('Deseja confirmar a venda?')then
   begin
     negocio :=TPedidoNegocio.Create;
-    //negocio.inserirOrAtualizar();
+    try
+      negocio.inserir(fPedido);
+      ModalResult :=mrOk;
+    except
+      raise;
+//      on E:Exception do
+//        dlg.alert('Deseja confirmar a venda?');
+    end;
   end;
 end;
 
@@ -128,6 +142,7 @@ var
 begin
   view :=TfrmPDV.Create(Application);
   try
+    view.inicialize();
     Result :=view.ShowModal() = mrOk;
   finally
     FreeAndNil(view);
@@ -138,22 +153,23 @@ procedure TfrmPDV.DoCreate;
 begin
   inherited;
   fCadastroNegocio :=TCadastroNegocio.Create;
-  fTanques :=TBaseItem.Create;
+  fTanques :=fCadastroNegocio.buscarBicosPorTanque() ;
   fPedido :=nil;
-  inicialize;
 end;
 
 procedure TfrmPDV.DoDestroy;
 begin
+  fCadastroNegocio.Free;
+  if Assigned(fPedido)then
+    fPedido.Free;
   inherited;
-  fTanques.Free ;
 end;
 
 procedure TfrmPDV.doRefreshBicos(aNode: TTreeNode);
 var
   tanque,
   bomba,
-  bico: TBaseItem;
+  bico: IBaseItem;
   item: TListItem;
 begin
   lvBicos.Items.BeginUpdate;
@@ -165,13 +181,13 @@ begin
 
     if(aNode.Data <> nil)then
     begin
-      bomba :=TBaseItem(aNode.Data);
+      bomba :=IBaseItem(aNode.Data);
       bico :=bomba.items[0];
 
       item :=lvBicos.Items.Add;
       item.Caption :=bico.descricao;
-      item.SubItems.Add('-');
-      item.SubItems.Add(Format('%12.3m',[bico.pro_preco]));
+      item.SubItems.Add(bomba.descricao);
+      item.SubItems.Add(Format('%12.3m',[bico.preco]));
       item.Data :=bico;
       lvBicos.ItemIndex :=0;
     end;
@@ -185,11 +201,8 @@ procedure TfrmPDV.inicialize;
 var
   tanque,
   bomba,
-  bico: TBaseItem;
-  //n0,n1: TTreeNode;
+  bico: IBaseItem;
 begin
-
-  fTanques :=fCadastroNegocio.buscarBicosPorTanque() ;
 
   tvBomba.Items.BeginUpdate;
   try
@@ -200,25 +213,14 @@ begin
       begin
         //
         // tanque/bomba
-        tvBomba.Items.AddNode(nil, nil,
-                              Format('BOMBA%d %s /%s Capacidade:%8.2f%s',[
-                                                            bomba.id,
-                                                            bomba.descricao,
-                                                            tanque.descricao,
-                                                            tanque.capacidade,
-                                                            tanque.pro_unid
-                                                            ]
-                                    ),
-                                    bomba,
-                                    naAdd
-        );
+        tvBomba.Items.AddNode(nil, nil, Format('BOMBA:%.2d /%s',[bomba.iD,bomba.descricao]), bomba, naAdd);
+
       end;
     end;
 
   finally
     tvBomba.Items.EndUpdate;
   end;
-
 
   actConfirm.Enabled :=false;
 

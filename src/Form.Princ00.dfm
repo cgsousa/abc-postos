@@ -13,6 +13,7 @@ object frmPrinc00: TfrmPrinc00
   Font.Name = 'Trebuchet MS'
   Font.Style = []
   OldCreateOrder = False
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 18
   object pnlFooter: TStackPanel
@@ -82,7 +83,7 @@ object frmPrinc00: TfrmPrinc00
   object pnlFilter: TStackPanel
     Left = 0
     Top = 0
-    Width = 150
+    Width = 161
     Height = 412
     Align = alLeft
     BevelOuter = bvNone
@@ -92,12 +93,24 @@ object frmPrinc00: TfrmPrinc00
         Control = Label1
         HorizontalPositioning = sphpFill
         VerticalPositioning = spvpTop
+      end
+      item
+        Control = Label2
+      end
+      item
+        Control = dpData1
+      end
+      item
+        Control = dpData2
+      end
+      item
+        Control = btnExec
       end>
     TabOrder = 1
     object Label1: TLabel
       Left = 0
       Top = 0
-      Width = 148
+      Width = 159
       Height = 18
       Align = alTop
       Alignment = taCenter
@@ -106,54 +119,159 @@ object frmPrinc00: TfrmPrinc00
       ParentColor = False
       Transparent = False
     end
+    object Label2: TLabel
+      Left = 0
+      Top = 20
+      Width = 47
+      Height = 18
+      Caption = 'Periodo:'
+    end
+    object dpData1: TDatePicker
+      AlignWithMargins = True
+      Left = 3
+      Top = 43
+      Date = 44553.000000000000000000
+      DateFormat = 'dd/MM/yyyy'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      TabOrder = 0
+    end
+    object dpData2: TDatePicker
+      AlignWithMargins = True
+      Left = 3
+      Top = 83
+      Date = 44553.000000000000000000
+      DateFormat = 'dd/MM/yyyy'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      TabOrder = 1
+    end
+    object btnExec: TButton
+      AlignWithMargins = True
+      Left = 3
+      Top = 123
+      Width = 100
+      Height = 30
+      Caption = 'Executar'
+      TabOrder = 2
+      OnClick = btnExecClick
+    end
   end
-  object lvPedidos: TListView
-    Left = 150
+  object StackPanel1: TStackPanel
+    Left = 161
     Top = 0
-    Width = 644
+    Width = 633
     Height = 412
     Align = alClient
-    Columns = <
+    BevelOuter = bvNone
+    BorderStyle = bsSingle
+    ControlCollection = <
       item
-        Caption = 'ID'
+        Control = HeaderControl1
+        HorizontalPositioning = sphpFill
+        VerticalPositioning = spvpTop
       end
       item
-        Alignment = taCenter
-        Caption = 'Data'
-        Width = 75
+        Control = tvData
+        HorizontalPositioning = sphpFill
+        VerticalPositioning = spvpTop
       end
       item
-        Caption = 'Descri'#231#227'o'
-        Width = 121
-      end
-      item
-        Alignment = taRightJustify
-        Caption = 'Qtde'
-        Width = 65
-      end
-      item
-        Alignment = taRightJustify
-        Caption = 'Pre'#231'o'
-        Width = 75
-      end
-      item
-        Alignment = taRightJustify
-        Caption = 'Total'
-        Width = 75
-      end
-      item
-        Alignment = taRightJustify
-        Caption = '%Imposto'
-        Width = 75
-      end
-      item
-        Alignment = taRightJustify
-        Caption = 'Imposto'
-        Width = 75
+        Control = lvPedidos
+        HorizontalPositioning = sphpFill
+        VerticalPositioning = spvpFill
       end>
-    ReadOnly = True
     TabOrder = 2
-    ViewStyle = vsReport
+    DesignSize = (
+      631
+      410)
+    object HeaderControl1: THeaderControl
+      Left = 0
+      Top = 0
+      Width = 631
+      Height = 21
+      Align = alNone
+      Anchors = [akLeft, akTop, akRight]
+      Sections = <
+        item
+          ImageIndex = -1
+          Text = 'Dia /Tanque /Bomba'
+          Width = 200
+        end
+        item
+          ImageIndex = -1
+          Text = 'TOTAL'
+          Width = 121
+        end>
+    end
+    object tvData: TTreeView
+      Left = 0
+      Top = 23
+      Width = 631
+      Height = 178
+      Anchors = [akLeft, akTop, akRight]
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Courier New'
+      Font.Style = []
+      Indent = 19
+      ParentFont = False
+      TabOrder = 0
+      OnChange = tvDataChange
+    end
+    object lvPedidos: TListView
+      Left = 0
+      Top = 203
+      Width = 631
+      Height = 208
+      Anchors = [akLeft, akTop, akRight, akBottom]
+      Columns = <
+        item
+          Caption = 'ID'
+          Width = 40
+        end
+        item
+          Caption = 'Descri'#231#227'o'
+          Width = 200
+        end
+        item
+          Alignment = taRightJustify
+          Caption = 'Qtde'
+          Width = 75
+        end
+        item
+          Alignment = taRightJustify
+          Caption = 'R$ V.Unit'#225'rio'
+          Width = 90
+        end
+        item
+          Alignment = taRightJustify
+          Caption = 'R$ V.Total'
+          Width = 100
+        end
+        item
+          Alignment = taRightJustify
+          Caption = 'R$ V.Imposto'
+          Width = 85
+        end>
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = 'Trebuchet MS'
+      Font.Style = []
+      ReadOnly = True
+      RowSelect = True
+      ParentFont = False
+      TabOrder = 1
+      ViewStyle = vsReport
+    end
   end
   object ActionList1: TActionList
     Left = 536

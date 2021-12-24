@@ -104,13 +104,12 @@
         </DelphiCompile>
         <DCCReference Include="Form.Princ00.pas">
             <Form>frmPrinc00</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="infra\dm\DM.StdConn.pas">
             <Form>dmStdConn</Form>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="infra\udatabase.pas"/>
+        <DCCReference Include="infra\uConnectionMgr.pas"/>
         <DCCReference Include="infra\uStdCtrls.pas"/>
         <DCCReference Include="orm\ORM.Attr.pas"/>
         <DCCReference Include="orm\ORM.Intf.pas"/>
@@ -137,6 +136,7 @@
         <DCCReference Include="orm\ORM.SQLAttr.pas"/>
         <DCCReference Include="orm\BaseRTTI.pas"/>
         <DCCReference Include="orm\BaseSQL.pas"/>
+        <DCCReference Include="dto\PedidoDTO.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

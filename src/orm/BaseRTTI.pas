@@ -56,30 +56,28 @@ type
   end;
 
 
-
   TBaseRTTI<T : class, constructor> = class(TInterfacedObject, IBaseRTTI<T>)
   private
-    fInstance : T;
+    fInstance: T;
     function findRTTIField(const ctxRtti: TRttiContext; classe: TClass; const Field: String): TRttiField;
     function floatFormat(const aValue: String ): Currency;
-//    function bindValueToProperty( aEntity : T; aProperty : TRttiProperty; aValue : TValue) : IBaseRTTI<T>;
 
     function getRTTIPropertyValue(aEntity: T; const aPropertyName: String): Variant;
     function getRTTIProperty(aEntity: T; const aPropertyName: String) : TRttiProperty;
+
   public
     constructor Create(aInstance: T);
     destructor Destroy; override;
 
-//    class function New( aInstance : T ) : IBaseRTTI<T>;
-
     function tableName(var aTableName: String): IBaseRTTI<T>;
-    function fields (var aFields : String) : IBaseRTTI<T>;
-    function fieldsInsert (var aFields : String) : IBaseRTTI<T>;
-    function param (var aParam : String) : IBaseRTTI<T>;
-    function where (var aWhere : String) : IBaseRTTI<T>;
-    function update(var aUpdate : String) : IBaseRTTI<T>;
-    function dictionaryFields(var aDictionary : TDictionary<string, variant>) : IBaseRTTI<T>;
-    function listFields (var List : TList<String>) : IBaseRTTI<T>;
+    function fields(var aFields: String): IBaseRTTI<T>;
+    function fieldsInsert(var aFields: String): IBaseRTTI<T>;
+    function param (var aParam: String): IBaseRTTI<T>;
+    function where (var aWhere: String): IBaseRTTI<T>;
+    function update(var aUpdate: String): IBaseRTTI<T>;
+
+    function columnsInfo(out aColumns: TBaseColumnArray): IBaseRTTI<T>;
+
     function className (var aClassName : String) : IBaseRTTI<T>;
     function primaryKey(var aPK : String) : IBaseRTTI<T>;
   end;
@@ -87,7 +85,7 @@ type
 
 implementation
 
-//uses System.SysUtils;
+uses System.variants;
 
 { TRttiPropertyHelper }
 
@@ -243,13 +241,111 @@ end;
 { TBaseRTTI<T> }
 
 function TBaseRTTI<T>.className(var aClassName: String): IBaseRTTI<T>;
+var
+  Info      : PTypeInfo;
+  ctxRtti   : TRttiContext;
+  typRtti   : TRttiType;
 begin
+  Result := Self;
+  Info := System.TypeInfo(T);
+  ctxRtti := TRttiContext.Create;
+  try
+    typRtti := ctxRtti.GetType(Info);
+    aClassName := Copy(typRtti.Name, 2, Length(typRtti.Name));
+  finally
+    ctxRtti.Free;
+  end;
+end;
 
+function TBaseRTTI<T>.columnsInfo(out aColumns: TBaseColumnArray): IBaseRTTI<T>;
+var
+  ctxRtti: TRttiContext;
+  typRtti: TRttiType;
+  prpRtti: TRttiProperty;
+  info: PTypeInfo;
+  value: TValue;
+var
+  I: Integer;
+begin
+  Result :=Self;
+  Info :=System.TypeInfo(T);
+  ctxRtti :=TRttiContext.Create;
+  I :=0;
+  try
+    typRtti := ctxRtti.GetType(Info);
+    for prpRtti in typRtti.GetProperties do
+    begin
+      if(prpRtti.IsIgnore)then
+      begin
+        Continue;
+      end;
+
+      SetLength(aColumns, I+1);
+      aColumns[I] :=TBaseColumn.Create(UpperCase(prpRtti.FieldName), ftUnknown, Null);
+
+      value :=prpRtti.GetValue(Pointer(fInstance));
+
+      case prpRtti.PropertyType.TypeKind of
+        tkInteger,tkInt64:
+        begin
+          aColumns[I].fldTyp:=ftInteger;
+          aColumns[I].value :=value.AsInteger;
+
+          if prpRtti.isPrimaryKey then
+            aColumns[I].flag :=cfPrimaryKey
+          else if prpRtti.isForeignKey then
+          begin
+            aColumns[I].flag :=cfForeignKey;
+            if(aColumns[I].value = 0)then
+              aColumns[I].value :=Null;
+          end;
+        end;
+
+        tkFloat:
+        begin
+          aColumns[I].value :=value.AsVariant;
+          if(value.TypeInfo = TypeInfo(TDateTime))then
+            aColumns[I].fldTyp :=ftDateTime
+          else if(value.TypeInfo = TypeInfo(TDate))then
+            aColumns[I].fldTyp :=ftDate
+          else if(value.TypeInfo = TypeInfo(TTime))then
+            aColumns[I].fldTyp :=ftTime
+          else
+            aColumns[I].fldTyp :=ftFloat;
+        end;
+        tkWChar,
+        tkLString,
+        tkWString,
+        tkUString,
+        tkString:
+        begin
+          aColumns[I].fldTyp :=ftString;
+          if(value.AsString <> '')then
+            aColumns[I].value :=value.AsVariant
+          else
+            aColumns[I].value :=Null;
+        end;
+        tkVariant:
+        begin
+          aColumns[I].fldTyp :=ftVariant;
+          aColumns[I].value :=value.AsVariant;
+        end
+      else
+        aColumns[I].value :=value.AsVariant;
+      end;
+
+      Inc(I);
+    end;
+
+  finally
+    ctxRtti.Free;
+  end;
 end;
 
 constructor TBaseRTTI<T>.Create(aInstance: T);
 begin
   fInstance :=aInstance;
+
 end;
 
 destructor TBaseRTTI<T>.Destroy;
@@ -258,20 +354,55 @@ begin
   inherited;
 end;
 
-function TBaseRTTI<T>.dictionaryFields(
-  var aDictionary: TDictionary<string, variant>): IBaseRTTI<T>;
-begin
-
-end;
-
 function TBaseRTTI<T>.fields(var aFields: String): IBaseRTTI<T>;
+var
+  ctxRtti   : TRttiContext;
+  typRtti   : TRttiType;
+  prpRtti   : TRttiProperty;
+  Info     : PTypeInfo;
 begin
-
+  Result := Self;
+  Info := System.TypeInfo(T);
+  ctxRtti := TRttiContext.Create;
+  try
+    typRtti := ctxRtti.GetType(Info);
+    for prpRtti in typRtti.GetProperties do
+    begin
+      if not prpRtti.IsIgnore then
+        aFields := aFields + prpRtti.FieldName + ', ';
+    end;
+  finally
+    aFields := Copy(aFields, 0, Length(aFields) - 2) + ' ';
+    ctxRtti.Free;
+  end;
 end;
 
 function TBaseRTTI<T>.fieldsInsert(var aFields: String): IBaseRTTI<T>;
+var
+  ctxRtti   : TRttiContext;
+  typRtti   : TRttiType;
+  prpRtti   : TRttiProperty;
+  Info     : PTypeInfo;
 begin
+  Result := Self;
+  Info := System.TypeInfo(T);
+  ctxRtti := TRttiContext.Create;
+  try
+    typRtti := ctxRtti.GetType(Info);
+    for prpRtti in typRtti.GetProperties do
+    begin
+      if prpRtti.IsAutoInc then
+        Continue;
 
+      if prpRtti.IsIgnore then
+        Continue;
+
+      aFields := aFields + prpRtti.FieldName + ', ';
+    end;
+  finally
+    aFields := Copy(aFields, 0, Length(aFields) - 2) + ' ';
+    ctxRtti.Free;
+  end;
 end;
 
 function TBaseRTTI<T>.findRTTIField(const ctxRtti: TRttiContext; classe: TClass;
@@ -319,18 +450,55 @@ begin
   Result :=getRTTIProperty(aEntity, aPropertyName).GetValue(Pointer(aEntity)).AsVariant;
 end;
 
-function TBaseRTTI<T>.listFields(var List: TList<String>): IBaseRTTI<T>;
-begin
-
-end;
-
 function TBaseRTTI<T>.param(var aParam: String): IBaseRTTI<T>;
+var
+  ctxRtti: TRttiContext;
+  typRtti: TRttiType;
+  prpRtti: TRttiProperty;
+  info: PTypeInfo;
 begin
+  Result :=Self;
+  Info :=System.TypeInfo(T);
+  ctxRtti :=TRttiContext.Create;
+  try
+    typRtti := ctxRtti.GetType(Info);
+    for prpRtti in typRtti.GetProperties do
+    begin
+      if(prpRtti.IsIgnore)or(prpRtti.IsAutoInc) then
+      begin
+        Continue;
+      end;
 
+      aParam :=aParam + ':' +prpRtti.FieldName +', ';
+
+    end;
+  finally
+    aParam := Copy(aParam, 0, Length(aParam) - 2) + ' ';
+    ctxRtti.Free;
+  end;
 end;
 
 function TBaseRTTI<T>.primaryKey(var aPK: String): IBaseRTTI<T>;
+var
+  ctxRtti   : TRttiContext;
+  typRtti   : TRttiType;
+  prpRtti   : TRttiProperty;
+  Info     : PTypeInfo;
 begin
+  Result := Self;
+  Info := System.TypeInfo(T);
+  ctxRtti := TRttiContext.Create;
+  try
+    typRtti := ctxRtti.GetType(Info);
+
+    for prpRtti in typRtti.GetProperties do
+    begin
+      if prpRtti.isPrimaryKey then
+        aPK := prpRtti.FieldName;
+    end;
+  finally
+    ctxRtti.Free;
+  end;
 
 end;
 
@@ -353,13 +521,54 @@ begin
 end;
 
 function TBaseRTTI<T>.update(var aUpdate: String): IBaseRTTI<T>;
+var
+  ctxRtti   : TRttiContext;
+  typRtti   : TRttiType;
+  prpRtti   : TRttiProperty;
+  Info     : PTypeInfo;
 begin
+  Result := Self;
+  Info := System.TypeInfo(T);
+  ctxRtti := TRttiContext.Create;
+  try
+    typRtti := ctxRtti.GetType(Info);
+    for prpRtti in typRtti.GetProperties do
+    begin
+      if prpRtti.IsIgnore then
+        Continue;
 
+      if prpRtti.IsAutoInc then
+        Continue;
+
+      aUpdate := aUpdate + prpRtti.FieldName + ' = :' + prpRtti.FieldName + ', ';
+    end;
+  finally
+    aUpdate := Copy(aUpdate, 0, Length(aUpdate) - 2) + ' ';
+    ctxRtti.Free;
+  end;
 end;
 
 function TBaseRTTI<T>.where(var aWhere: String): IBaseRTTI<T>;
+var
+  ctxRtti   : TRttiContext;
+  typRtti   : TRttiType;
+  prpRtti   : TRttiProperty;
+  Info     : PTypeInfo;
 begin
-
+  Result := Self;
+  Info := System.TypeInfo(T);
+  ctxRtti := TRttiContext.Create;
+  try
+    typRtti := ctxRtti.GetType(Info);
+    for prpRtti in typRtti.GetProperties do
+    begin
+      if prpRtti.isPrimaryKey then
+        aWhere := aWhere + prpRtti.FieldName + ' = :' + prpRtti.FieldName + ' AND ';
+    end;
+  finally
+    aWhere := Copy(aWhere, 0, Length(aWhere) - 4) + ' ';
+    ctxRtti.Free;
+  end;
 end;
 
 
